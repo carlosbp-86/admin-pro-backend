@@ -9,22 +9,18 @@ const { dbConnection } = require('./database/config');
 // Crear el servidor express
 const app = express();
 
-// Base de datos
-dbConnection();
-
 // Configurar CORS
 app.use( cors() );
 
+// Lectura de parseo del body
+app.use( express.json());
 
+// Base de datos
+dbConnection();
 
 // Rutas
-app.get( '/', (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'Ola K Ase!!'
-    })
-} );
-
+app.use( '/api/usuarios', require( './routes/usuarios'));
+app.use( '/api/login', require( './routes/auth'));
 
 
 
