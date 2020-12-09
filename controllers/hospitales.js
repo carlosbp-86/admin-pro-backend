@@ -25,9 +25,6 @@ const crearHospital = async ( req, res = response ) => {
         usuario: uid,
         ...req.body
     } );
-    
-
-    // console.log(uid);
 
     try {
 
@@ -45,24 +42,79 @@ const crearHospital = async ( req, res = response ) => {
             msg: 'Se produjo un error a la hora de crear el hospital' 
         })
     }
-
-
 }
 
 
-const actualizarHospital = ( req, res ) => {
-    res.json({
-        ok: true,
-        msg: 'actualizarHospital Funciona'
-    })
+const actualizarHospital = async ( req, res ) => {
+
+    const id = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const hospital = await Hospital.findById(id);
+
+        if ( !hospital ){
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un hospital por ese ID'
+            })
+        }
+
+        const cambiosHospital = {
+            ...req.body,
+            usuario: uid
+        }
+
+        const hospitalActualizado = await Hospital.findByIdAndUpdate( id, cambiosHospital, { new: true } );
+
+        res.json({
+            ok: true,
+            hospital: hospitalActualizado
+        });    
+        
+    } catch (error) {
+
+        res.status(500).json({
+            ok: false,
+            msg: 'Se ha producido un error a la hora de actualizar el hospital'
+        });
+        
+    }
 }
 
 
-const borrarHospital = ( req, res ) => {
-    res.json({
-        ok: true,
-        msg: 'borrarHospital Funciona'
-    })
+const borrarHospital = async ( req, res ) => {
+    
+    const id = req.params.id;    
+
+    try {
+
+        const hospital = await Hospital.findById(id);
+
+        if ( !hospital ){
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un hospital por ese ID'
+            })
+        }
+
+        await Hospital.findByIdAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: 'El hospital ha sido eliminado'
+        });    
+        
+    } catch (error) {
+
+        res.status(500).json({
+            ok: false,
+            msg: 'Se ha producido un error a la hora de eliminar el hospital'
+        });
+        
+    }   
+
 }
 
 
