@@ -1,3 +1,8 @@
+/*
+    USUARIO CONTROLLER
+*/
+
+
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 
@@ -6,15 +11,34 @@ const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuario');
 const { generarJWT } = require('../helpers/jwt');
 
-const getUsuarios = async (req, res) => {
+const getUsuarios = async (req, res = response) => {
+
+    const desde = Number(req.query.desde) || 0;
+    console.log(desde);
 
     //const usuarios = await Usuario.find();             // Trae todos los datos
-    const usuarios = await Usuario.find({}, 'nombre email role google');           // Indicamos los campos que queremos devolver
+    
+    //const usuarios = await Usuario.find( {}, 'nombre email role google' ) // Indicamos los campos que queremos devolver
+    //                              .skip( desde )
+    //                              .limit( 5 ); 
+    //                             
+    //const total = await Usuario.count();              
+    
+    
+    // Este bloque trae los datos igual que el bloque comentado de arriba, pero lo hace todo en una promesa para no tener que 
+    // hacer dos awaits.
+    const [ usuarios, total ] = await Promise.all([
+                                    Usuario.find( {}, 'nombre email role google img' ) // Indicamos los campos que queremos devolver
+                                                                .skip( desde )
+                                                                .limit( 5 ),
+                                                                Usuario.countDocuments()                                           
+                                ]);
 
     res.json({
         ok: true,
         usuarios: usuarios,
-        uid: req.uid
+        total: total
+        //uid: req.uid
     });
 }
 

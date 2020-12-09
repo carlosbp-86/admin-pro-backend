@@ -31,7 +31,7 @@ const UsuarioSchema = Schema({
 
 // Cambiar la propiedad automática "_id" a "uid"
 UsuarioSchema.method('toJSON', function(){
-    const { __v, _id, ...object} = this.toObject();
+    const { __v, _id, password, ...object} = this.toObject();
 
     object.uid = _id;
 
