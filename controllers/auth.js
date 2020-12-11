@@ -110,13 +110,19 @@ const googleSignIn =  async( req, res = response) => {
 
 const renewToken = async (req, res = response) => {
 
-    const uid = req.uid;
+   const uid = req.uid;
 
+   // GENERAR TOKEN - JWT
    const token = await generarJWT(uid);
+
+   // OBTENER USUARIO POR UID
+   
+   const usuario = await Usuario.findById(uid);
 
     res.json({
         ok: true,
-        token: token
+        token: token,
+        usuario: usuario
     });
 }
 
