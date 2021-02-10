@@ -31,5 +31,5 @@ const getMenuFrontEnd = ( role = 'USER_ROLE' ) => {
 }
 
 module.exports = {
-    getMenuFrontEnd 
+    getMenuFrontEnd  
 }
